@@ -1,12 +1,22 @@
 const express = require("express");
+const { engine } = require('express-handlebars');
+
+// console.log(engine);
+
 const app = express();
 
+app.engine('handlebars', engine());
+app.set('view engine', 'handlebars');
+app.set('views', './src/views');
+
+app.use(express.static('public'));
+
 const config = {
-  PORT: 5050,
+  PORT: 3000,
 };
 
 app.get("/", function (req, res) {
-  res.send("Hello World");
+  res.render('home');
 });
 
 app.listen(config.PORT, () => {
