@@ -1,18 +1,25 @@
 const router = require('express').Router();
 
-router.get("/users/register", function (req, res) {
+router.get("/register", function (req, res) {
   res.render('register');
 });
 
-router.get("/users/login", function (req, res) {
+router.get("/login", function (req, res) {
   res.render('login');
 });
 
-router.get("/users/profile", function (req, res) {
+router.post("/login", function (req, res) {
+  console.log('Login Post');
+  console.log(req.body);
+
+  res.redirect('/books');
+});
+
+router.get("/profile", function (req, res) {
   res.render('profile');
 });
 
-router.get("/users/logout", function (req, res) {
+router.get("/logout", function (req, res) {
   res.send('logout');
 });
 

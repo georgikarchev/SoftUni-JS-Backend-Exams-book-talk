@@ -1,18 +1,18 @@
 const router = require('express').Router();
 
-router.get("/books", function (req, res) {
+router.get("/", function (req, res) {
   res.render('catalog');
 });
 
-router.get("/books/create", function (req, res) {
+router.get("/create", function (req, res) {
   res.render('create');
 });
 
-router.get("/books/details", function (req, res) {
+router.get("/details", function (req, res) {
   res.render('details');
 });
 
-router.get("/books/edit", function (req, res) {
+router.get("/edit", function (req, res) {
   res.render('edit');
 });
 
