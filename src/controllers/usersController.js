@@ -9,8 +9,11 @@ router.get("/login", function (req, res) {
 });
 
 router.post("/login", function (req, res) {
-  console.log('Login Post');
-  console.log(req.body);
+  const {email, password} = req.body;
+
+  if(email !== 'gogo@gogo.com') {
+    // error 
+  }
 
   res.redirect('/books');
 });

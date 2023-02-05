@@ -1,3 +1,12 @@
+// The app needs the following packages
+
+// express
+// express-handlebars
+// jsnonwebtoken
+// cookie-parser
+// bcrypt
+// mongoose
+
 const express = require("express");
 const { engine } = require('express-handlebars');
 
@@ -8,8 +17,8 @@ const router = require('./routes');
 
 const app = express();
 
-app.engine('handlebars', engine());
-app.set('view engine', 'handlebars');
+app.engine('hbs', engine({extname: 'hbs'}));
+app.set('view engine', 'hbs');
 app.set('views', './src/views');
 
 app.use(express.static('public'));
