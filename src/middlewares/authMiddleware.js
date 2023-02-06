@@ -14,8 +14,8 @@ exports.auth = function (req, res, next) {
       if(err) {
         res.status(404).render('404');
       }
-      console.log(decoded);
-      res.user = decoded;
+      
+      req.user = decoded;
       res.locals.user = decoded; // give hbs access to user data
       next();
     });
@@ -24,7 +24,7 @@ exports.auth = function (req, res, next) {
   }
 };
 
-exports.isAUth = function (req, res, next) {
+exports.isAuth = function (req, res, next) {
   if (req.user) {
     next();
   } else {

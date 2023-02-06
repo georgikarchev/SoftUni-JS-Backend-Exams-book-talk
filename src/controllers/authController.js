@@ -2,13 +2,14 @@ const router = require("express").Router();
 
 const { AUTH_COOKIE_NAME } = require("../constants");
 const authService = require("../services/authService");
+const { isGuest, isAuth } = require("../middlewares/authMiddleware");
 
-router.get("/register", function (req, res) {
+router.get("/register", isGuest, function (req, res) {
   res.locals.title = "Register page";
   res.render("register");
 });
 
-router.post("/register", async function (req, res) {
+router.post("/register", isGuest, async function (req, res) {
   // console.log('Register action');
   const { email, username, password, repassword } = req.body;
   // console.log({ email, username, password, repassword });
@@ -29,11 +30,11 @@ router.post("/register", async function (req, res) {
   }
 });
 
-router.get("/login", function (req, res) {
+router.get("/login", isGuest, function (req, res) {
   res.render("login");
 });
 
-router.post("/login", async function (req, res) {
+router.post("/login", isGuest, async function (req, res) {
   const { email, password } = req.body;
 
   try {
@@ -49,11 +50,11 @@ router.post("/login", async function (req, res) {
   }
 });
 
-router.get("/profile", function (req, res) {
+router.get("/profile", isAuth, function (req, res) {
   res.render("profile");
 });
 
-router.get("/logout", function (req, res) {
+router.get("/logout", isAuth, function (req, res) {
   res.clearCookie(AUTH_COOKIE_NAME);
   res.redirect("/");
 });
