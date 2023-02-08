@@ -14,9 +14,19 @@ router.post("/register", isGuest, async function (req, res) {
   const { email, username, password, repassword } = req.body;
   // console.log({ email, username, password, repassword });
 
-  // 1 check if pass === repass
+  // check if pass === repass
   if (password !== repassword) {
-    return res.render("register", { error: "Passwords don't match" });
+    return res.render("register", { error: "The repeat password should be equal to the password" });
+  }
+
+  // check if password length is >= 3 characters
+  if(password.length < 3) {
+    return res.render("register", { error: "The password should be at least 3 characters long" });
+  }
+
+  // check if password length is >= 10 characters
+  if(email.length < 10) {
+    return res.render("register", { error: "The email should be at least 10 characters long" });
   }
 
   try {
@@ -36,6 +46,16 @@ router.get("/login", isGuest, function (req, res) {
 
 router.post("/login", isGuest, async function (req, res) {
   const { email, password } = req.body;
+
+  // check if password length is >= 3 characters
+  if(password.length < 3) {
+    return res.render("login", { error: "The password should be at least 3 characters long" });
+  }
+
+  // check if password length is >= 10 characters
+  if(email.length < 10) {
+    return res.render("login", { error: "The email should be at least 10 characters long" });
+  }
 
   try {
     // TODO: (inService) find user in DB -> Check password match -> create jwt and return it

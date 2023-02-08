@@ -1,24 +1,26 @@
 <!-- In case of error, you should display div with class "errorContainer" -->
 <!-- You can choose to display the first error or all of them (error message/s in your opinion) -->
-<!-- <div>
-        <div class="errorContainer">
-            <p>Error</p>
-        </div>
-    </div> -->
+{{#if error}}
+<div>
+  <div class="errorContainer">
+    <p>{{error}}</p>
+  </div>
+</div>
+{{/if}}
 
 <section class="create-form-container">
   <form method="post">
     <h3>Create Book Review</h3>
-    <label>Title</label>
-    <input type="text" name="title" class="box" id="" />
+    <label>Title {{book}}</label>
+    <input type="text" name="title" class="box" id="" value="{{book.title}}" />
     <label>Author</label>
-    <input type="text" name="author" class="box" id="" />
+    <input type="text" name="author" class="box" id="" value="{{book.author}}" />
     <label>Genre</label>
-    <input type="text" name="genre" class="box" id="" />
+    <input type="text" name="genre" class="box" id="" value="{{book.genre}}" />
     <label>Stars</label>
-    <input type="number" name="stars" class="box" id="" />
+    <input type="number" name="stars" class="box" id="" value="{{book.stars}}" />
     <label>Image</label>
-    <input type="text" name="image" class="box" id="" />
+    <input type="text" name="image" class="box" id="" value="{{book.image}}" />
     <label>Review</label>
     <textarea class="box" name="review"></textarea>
     <input type="submit" value="Create" class="btn" />

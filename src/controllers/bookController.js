@@ -16,6 +16,37 @@ router.get("/create", isAuth, function (req, res) {
 
 router.post("/create", isAuth, async function (req, res) {
   const { title, author, genre, stars, image, review } = req.body;
+  res.locals.book = { title, author, genre, stars, image, review };
+
+  if(title.length < 2) {
+    res.locals.error = "The Title should be at least 2 character";
+    return res.render('create');
+  }
+
+  if(author.length < 5) {
+    res.locals.error = "The Author should be at least 5 characters";
+    return res.render('create');
+  }
+
+  if(genre.length < 3) {
+    res.locals.error = "The Genre should be at least 3 characters";
+    return res.render('create');
+  }
+
+  if(stars < 1 || stars > 5) {
+    res.locals.error = "The Stars should be a positive number between 1 and 5";
+    return res.render('create');
+  }
+
+  if(!(image.startsWith('http://') || image.startsWith('https://'))) {
+    res.locals.error = "The Image should start with http:// or https://";
+    return res.render('create');
+  }
+
+  if(review.length < 10) {
+    res.locals.error = "The Review should be a minimum of 10 characters long.";
+    return res.render('create');
+  }
 
   try {
     const newBook = await bookService.create({
@@ -77,16 +108,48 @@ router.get("/:bookId/edit", isAuth, async function (req, res) {
     res.status(401).end();
   }
   
-  res.locals.title = `Book Details`;  
-  res.render("edit", { book });
+  res.locals.title = `Book Details`;
+  res.locals.book = book
+  res.render("edit");
 });
 
 router.post("/:bookId/edit", isAuth, async function (req, res) {
   const bookId = req.params.bookId;
   const { title, author, genre, stars, image, review } = req.body;
+  res.locals.book = { title, author, genre, stars, image, bookReview: review };
+
+  if(title.length < 2) {
+    res.locals.error = "The Title should be at least 2 character";
+    return res.render('edit');
+  }
+
+  if(author.length < 5) {
+    res.locals.error = "The Author should be at least 5 characters";
+    return res.render('edit');
+  }
+
+  if(genre.length < 3) {
+    res.locals.error = "The Genre should be at least 3 characters";
+    return res.render('edit');
+  }
+
+  if(stars < 1 || stars > 5) {
+    res.locals.error = "The Stars should be a positive number between 1 and 5";
+    return res.render('edit');
+  }
+
+  if(!(image.startsWith('http://') || image.startsWith('https://'))) {
+    res.locals.error = "The Image should start with http:// or https://";
+    return res.render('edit');
+  }
+
+  if(review.length < 10) {
+    res.locals.error = "The Review should be a minimum of 10 characters long.";
+    return res.render('edit');
+  }
 
   try {
-    const newBook = await bookService.edit(bookId, {
+    const editedBook = await bookService.edit(bookId, {
       title,
       author,
       genre,
@@ -99,7 +162,6 @@ router.post("/:bookId/edit", isAuth, async function (req, res) {
   } catch (error) {
     console.log(error.message);
     res.locals.error = "Could not edit book review";
-    res.locals.book = { title, author, genre, stars, image, review };
     res.render("edit");
   }
 });
