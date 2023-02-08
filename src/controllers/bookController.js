@@ -58,8 +58,18 @@ router.get("/:bookId//edit", isAuth, function (req, res) {
   res.render("edit");
 });
 
-router.get("/:bookId//wish", isAuth, function (req, res) {
-  res.render("wish");
+router.get("/:bookId/wish", isAuth, async function (req, res) {
+  const bookId = req.params.bookId;
+
+  try {
+    await bookService.wish(bookId, req.user._id);
+  } catch (error) {
+    console.log(error.message);
+    res.locals.error = "Could not add book to wishingList";
+    res.render("404");
+  }
+
+  res.redirect(`/books/${bookId}/details`);
 });
 
 module.exports = router;
