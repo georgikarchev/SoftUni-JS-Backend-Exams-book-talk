@@ -8,9 +8,9 @@ router.use('/', homeController);
 router.use('/auth', usersController);
 router.use('/books', bookController);
 
-router.all("/*", function (req, res) {
-  res.redirect('/404');
-})
+// router.all("/*", function (req, res) {
+//   res.redirect('/404');
+// })
 
 
 module.exports = router;
