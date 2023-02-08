@@ -22,3 +22,5 @@ exports.wish = async (bookId, userId) => {
   book.wishingList.push(userId);
   await book.save();
 };
+
+exports.delete = async (bookId) => await Book.findByIdAndDelete(bookId);

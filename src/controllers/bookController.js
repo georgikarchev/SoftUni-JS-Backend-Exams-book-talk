@@ -41,7 +41,7 @@ router.get("/:bookId/details", async function (req, res) {
   res.locals.title = `Book Details`;
 
   const isInWishingList = req.user
-    ? book.wishingList.map(x => x.valueOf()).includes(req.user._id)
+    ? book.wishingList.map((x) => x.valueOf()).includes(req.user._id)
     : false;
 
   const isOwner = req.user ? req.user._id == book.owner.valueOf() : false;
@@ -52,10 +52,6 @@ router.get("/:bookId/details", async function (req, res) {
     isAuthenticated,
     isNotInWishingList: !isInWishingList,
   });
-});
-
-router.get("/:bookId//edit", isAuth, function (req, res) {
-  res.render("edit");
 });
 
 router.get("/:bookId/wish", isAuth, async function (req, res) {
@@ -70,6 +66,40 @@ router.get("/:bookId/wish", isAuth, async function (req, res) {
   }
 
   res.redirect(`/books/${bookId}/details`);
+});
+
+router.get("/:bookId/edit", isAuth, function (req, res) {
+  res.render("edit");
+});
+
+router.get("/:bookId/delete", isAuth, async function (req, res) {
+  const bookId = req.params.bookId;
+
+  try {
+    // get book data
+    const book = await bookService.getBook(bookId);
+
+    // check if uset is owner
+    if (req.user._id != book.owner.valueOf()) {
+      res.locals.error = "User is not an owner of the book. Can't delete.";
+      res.render("404");
+    }
+
+    // delete book
+    try {
+      await bookService.delete(bookId);
+    } catch (error) {
+      console.log(error.message);
+      res.locals.error = error.message;
+      res.render("404");
+    }
+
+    res.redirect("/books");
+  } catch (error) {
+    console.log(error.message);
+    res.locals.error = "Could not find a book with that ID";
+    res.render("404");
+  }
 });
 
 module.exports = router;
