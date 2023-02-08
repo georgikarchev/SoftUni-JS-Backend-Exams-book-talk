@@ -41,7 +41,7 @@ router.get("/:bookId/details", async function (req, res) {
   res.locals.title = `Book Details`;
 
   const isInWishingList = req.user
-    ? book.wishingList.includes(req.user._id)
+    ? book.wishingList.map(x => x.valueOf()).includes(req.user._id)
     : false;
 
   const isOwner = req.user ? req.user._id == book.owner.valueOf() : false;
