@@ -18,7 +18,7 @@ router.post("/create", isAuth, async function (req, res) {
   const { title, author, genre, stars, image, review } = req.body;
 
   try {
-    const newBook = await bookService.createReview({
+    const newBook = await bookService.create({
       title,
       author,
       genre,
@@ -68,8 +68,40 @@ router.get("/:bookId/wish", isAuth, async function (req, res) {
   res.redirect(`/books/${bookId}/details`);
 });
 
-router.get("/:bookId/edit", isAuth, function (req, res) {
-  res.render("edit");
+router.get("/:bookId/edit", isAuth, async function (req, res) {
+  const bookId = req.params.bookId;
+  const book = await bookService.getBook(bookId);
+  const isOwner = req.user ? req.user._id == book.owner.valueOf() : false;
+  
+  if(!isOwner) {
+    res.status(401).end();
+  }
+  
+  res.locals.title = `Book Details`;  
+  res.render("edit", { book });
+});
+
+router.post("/:bookId/edit", isAuth, async function (req, res) {
+  const bookId = req.params.bookId;
+  const { title, author, genre, stars, image, review } = req.body;
+
+  try {
+    const newBook = await bookService.edit(bookId, {
+      title,
+      author,
+      genre,
+      stars,
+      image,
+      review,
+      owner: req.user._id,
+    });
+    res.redirect(`/books/${bookId}/details`);
+  } catch (error) {
+    console.log(error.message);
+    res.locals.error = "Could not edit book review";
+    res.locals.book = { title, author, genre, stars, image, review };
+    res.render("edit");
+  }
 });
 
 router.get("/:bookId/delete", isAuth, async function (req, res) {
