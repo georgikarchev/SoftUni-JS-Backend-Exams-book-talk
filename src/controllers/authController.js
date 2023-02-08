@@ -2,6 +2,7 @@ const router = require("express").Router();
 
 const { AUTH_COOKIE_NAME } = require("../constants");
 const authService = require("../services/authService");
+const bookService = require("../services/bookService");
 const { isGuest, isAuth } = require("../middlewares/authMiddleware");
 
 router.get("/register", isGuest, function (req, res) {
@@ -16,17 +17,23 @@ router.post("/register", isGuest, async function (req, res) {
 
   // check if pass === repass
   if (password !== repassword) {
-    return res.render("register", { error: "The repeat password should be equal to the password" });
+    return res.render("register", {
+      error: "The repeat password should be equal to the password",
+    });
   }
 
   // check if password length is >= 3 characters
-  if(password.length < 3) {
-    return res.render("register", { error: "The password should be at least 3 characters long" });
+  if (password.length < 3) {
+    return res.render("register", {
+      error: "The password should be at least 3 characters long",
+    });
   }
 
   // check if password length is >= 10 characters
-  if(email.length < 10) {
-    return res.render("register", { error: "The email should be at least 10 characters long" });
+  if (email.length < 10) {
+    return res.render("register", {
+      error: "The email should be at least 10 characters long",
+    });
   }
 
   try {
@@ -48,13 +55,17 @@ router.post("/login", isGuest, async function (req, res) {
   const { email, password } = req.body;
 
   // check if password length is >= 3 characters
-  if(password.length < 3) {
-    return res.render("login", { error: "The password should be at least 3 characters long" });
+  if (password.length < 3) {
+    return res.render("login", {
+      error: "The password should be at least 3 characters long",
+    });
   }
 
   // check if password length is >= 10 characters
-  if(email.length < 10) {
-    return res.render("login", { error: "The email should be at least 10 characters long" });
+  if (email.length < 10) {
+    return res.render("login", {
+      error: "The email should be at least 10 characters long",
+    });
   }
 
   try {
@@ -70,8 +81,17 @@ router.post("/login", isGuest, async function (req, res) {
   }
 });
 
-router.get("/profile", isAuth, function (req, res) {
-  res.render("profile");
+router.get("/profile", isAuth, async function (req, res) {
+  try {
+    const wishList = await bookService.fetchWishList(req.user._id);
+    res.locals.wishList = wishList;
+    res.locals.email = req.user.email;
+    res.render("profile");
+  } catch (error) {
+    console.log(error.message);
+    res.locals.error = error.message;
+    res.render("profile");
+  }
 });
 
 router.get("/logout", isAuth, function (req, res) {

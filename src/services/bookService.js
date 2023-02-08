@@ -47,3 +47,5 @@ exports.edit = async (
   });
 
 exports.delete = async (bookId) => await Book.findByIdAndDelete(bookId);
+
+exports.fetchWishList = async (userId) => await Book.find({wishingList: userId}).lean();

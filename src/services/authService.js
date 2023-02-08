@@ -49,3 +49,5 @@ exports.register = async ({ email, username, password }) => {
 
   return token;
 };
+
+exports.fetchUser = async (userId) => User.findById(userId);
