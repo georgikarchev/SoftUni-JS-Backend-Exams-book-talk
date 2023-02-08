@@ -43,7 +43,8 @@ router.get("/:bookId/details", async function (req, res) {
   const isInWishingList = req.user
     ? book.wishingList.includes(req.user._id)
     : false;
-  const isOwner = req.user ? req.user._id === book.owner : false;
+
+  const isOwner = req.user ? req.user._id == book.owner.valueOf() : false;
   const isAuthenticated = Boolean(req.user);
   res.render("details", {
     book,
@@ -55,6 +56,10 @@ router.get("/:bookId/details", async function (req, res) {
 
 router.get("/:bookId//edit", isAuth, function (req, res) {
   res.render("edit");
+});
+
+router.get("/:bookId//wish", isAuth, function (req, res) {
+  res.render("wish");
 });
 
 module.exports = router;
